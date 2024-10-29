@@ -1,4 +1,4 @@
-import { ConflictException, ForbiddenException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { CreateHabilityDto } from './dto/create-hability.dto';
 import { UpdateHabilityDto } from './dto/update-hability.dto';
 import { InjectModel } from '@nestjs/mongoose';

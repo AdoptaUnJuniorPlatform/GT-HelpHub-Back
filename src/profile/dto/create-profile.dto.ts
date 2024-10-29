@@ -66,6 +66,4 @@ export class CreateProfileDto {
   @IsEnum(DaysOfWeek, { each: true })
   @IsNotEmpty()
   selectedDays: DaysOfWeek[];
-
-  
 }

@@ -1,6 +1,5 @@
-import { PartialType } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateProfileDto } from './create-profile.dto';
-import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IsOptional, IsString, IsEnum, IsArray } from 'class-validator';
 import { TimeRange, DaysOfWeek } from '../entities/profile.schema';
 

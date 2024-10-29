@@ -5,13 +5,10 @@ import { User } from 'src/user/entities/user.schema';
 import { Model } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from "argon2";
-import { v4 } from 'uuid';
-import { LoginUserDto } from 'src/user/dto/login-user.dto';
-
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly jwtService: JwtService,
     
   ) {}
