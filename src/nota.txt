@@ -1,0 +1,19 @@
+Script de RS.
+API con endpoints.
+
+El sistema se compone de dos archivos principales:
+
+- app.py: Este archivo implementa una aplicación web usando Flask para gestionar un sistema de recomendación de habilidades y perfiles de usuarios. Define varios endpoints para interactuar con el sistema:
+
+/recomendaciones: Recibe una habilidad y preferencias (días, rango de tiempo) y devuelve perfiles recomendados.
+/habilidades_ofrecidas: Retorna una lista de habilidades que los usuarios ofrecen.
+/calificar_habilidad: Permite calificar una habilidad para un usuario específico.
+/promedio_calificacion: Devuelve el promedio de calificación de una habilidad específica.
+
+Al iniciar, carga los datos de un archivo Excel (base_datos.xlsx), usando funciones del archivo sistema_recomendacion.py.
+
+- sistema_recomendacion.py: Contiene funciones auxiliares para cargar los datos desde un archivo Excel y realizar operaciones de filtrado y recomendación:
+
+cargar_datos: Carga datos de usuarios, perfiles, habilidades y categorías desde Excel.
+obtener_habilidades_ofrecidas: Devuelve las habilidades ofrecidas únicas.
+filtrar_perfiles: Filtra los perfiles de acuerdo con criterios específicos.
