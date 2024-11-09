@@ -17,3 +17,168 @@ Al iniciar, carga los datos de un archivo Excel (base_datos.xlsx), usando funcio
 cargar_datos: Carga datos de usuarios, perfiles, habilidades y categorías desde Excel.
 obtener_habilidades_ofrecidas: Devuelve las habilidades ofrecidas únicas.
 filtrar_perfiles: Filtra los perfiles de acuerdo con criterios específicos.
+
+1. Configura un Proyecto de TypeScript con Vite o Webpack
+Para configurar TypeScript en el front-end, usa Vite (una herramienta moderna y rápida para configurar proyectos web) o Webpack:
+
+bash
+Copiar código
+npm create vite@latest mi-proyecto --template vanilla-ts
+cd mi-proyecto
+npm install
+O, si prefieres Webpack:
+
+bash
+Copiar código
+npm init -y
+npm install webpack webpack-cli typescript ts-loader --save-dev
+Luego, en ambos casos, configura TypeScript creando un archivo tsconfig.json y configurando los detalles del compilador TypeScript según tus necesidades.
+
+2. Configura un Servidor Proxy para el API de Flask
+Configura un servidor proxy en el proyecto de Vite para evitar problemas de CORS (Cross-Origin Resource Sharing). Modifica el archivo vite.config.ts para redirigir las solicitudes al servidor Flask:
+
+typescript
+Copiar código
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:5000',  // Puerto donde corre Flask
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
+})
+3. Realiza Llamadas al API desde TypeScript
+Puedes usar fetch o una librería como axios para realizar llamadas a la API de Flask desde TypeScript. Aquí tienes ejemplos de las llamadas usando fetch.
+
+Obtener Recomendaciones de Perfiles
+typescript
+Copiar código
+async function obtenerRecomendaciones(habilidad: string, dias: string[], rangoTiempo: string) {
+    const response = await fetch('/api/recomendaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            habilidad_a_aprender: habilidad,
+            dias_preferidos: dias,
+            rango_tiempo_preferido: rangoTiempo
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+}
+Obtener Habilidades Ofrecidas
+typescript
+Copiar código
+async function obtenerHabilidadesOfrecidas() {
+    const response = await fetch('/api/habilidades_ofrecidas');
+    if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.habilidades;
+}
+Calificar una Habilidad
+typescript
+Copiar código
+async function calificarHabilidad(userId: number, habilidad: string, calificacion: number) {
+    const response = await fetch('/api/calificar_habilidad', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            user_id: userId,
+            skill: habilidad,
+            rating: calificacion
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+}
+Obtener Promedio de Calificación
+typescript
+Copiar código
+async function obtenerPromedioCalificacion(habilidad: string) {
+    const response = await fetch(`/api/promedio_calificacion?skill=${encodeURIComponent(habilidad)}`);
+    if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.promedio;
+}
+4. Crear Componentes y UI en TypeScript
+Si utilizas frameworks como React o Vue, puedes crear componentes en TypeScript para cada función. Si no, simplemente usa JavaScript con TypeScript para gestionar los datos y mostrar resultados en el DOM.
+
+Ejemplo básico de una UI en HTML
+html
+Copiar código
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Recomendación</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Recomendaciones</h1>
+        <!-- Elementos de interfaz para obtener recomendaciones -->
+    </div>
+    <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
+5. Crea el Archivo Principal en TypeScript (src/main.ts)
+typescript
+Copiar código
+import { obtenerRecomendaciones, obtenerHabilidadesOfrecidas, calificarHabilidad, obtenerPromedioCalificacion } from './api';
+
+// Aquí puedes llamar las funciones e integrar el frontend
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const habilidades = await obtenerHabilidadesOfrecidas();
+        console.log("Habilidades ofrecidas:", habilidades);
+
+        // Ejemplo de cómo obtener recomendaciones
+        const recomendaciones = await obtenerRecomendaciones("Python", ["Lunes", "Miércoles"], "mañana");
+        console.log("Recomendaciones:", recomendaciones);
+
+        // Ejemplo de calificación
+        await calificarHabilidad(1, "Python", 5);
+
+        // Ejemplo de obtener promedio de calificación
+        const promedio = await obtenerPromedioCalificacion("Python");
+        console.log("Promedio de calificación de Python:", promedio);
+    } catch (error) {
+        console.error("Error:", error);
+    }
+});
+6. Ejecuta Ambos Servidores
+Para ejecutar el backend en Flask y el frontend en Vite:
+
+Backend (Flask): Asegúrate de correr Flask en el puerto 5000:
+
+bash
+Copiar código
+python app.py
+Frontend (Vite):
+
+bash
+Copiar código
+npm run dev
+Resumen
+Este enfoque te permite integrar TypeScript para manejar la lógica de interacción y visualizar los datos de la API de Flask. Al configurar un proxy en el frontend, puedes evitar problemas de CORS mientras mantienes separados el backend y el frontend.
